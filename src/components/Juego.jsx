@@ -175,31 +175,42 @@ function Juego({ volver }) {
         else setMensajeGolpe("Fallaste. Fin del ataque.");
     };
 
+// --- FUNCIÓN AUXILIAR PARA CERRAR EL TURNO ---
+  // Esta función es la que "limpia la mesa" y le pasa el control al otro jugador.
+  const cerrarTurnoCompleto = () => {
+      setTurno(prev => prev === 1 ? 2 : 1); // ¡Aquí está la magia del cambio de turno!
+      setEtapaTurno('tirar_inicial');
+      setEnFaseGolpe(false);
+      setEstrategia(null);
+      setDadosRonda([null, null, null, null, null]);
+      setPuntosTurno(0);
+      setCountGuardados(0);
+      setDadoEstrategia(null);
+  };
+
+  // --- FUNCIÓN PARA TERMINAR EL ATAQUE ---
   const finalizarAtaque = () => {
       const aciertos = dadosBloqueados.filter(b => b).length;
       const daño = aciertos * puntosTurno;
       
       if (daño > 0) {
-        // Calculamos cuánto le quedaría al rival
+        // 1. Verificar si este daño ELIMINA al rival
         const puntajeRivalActual = turno === 1 ? puntajes.jug2 : puntajes.jug1;
         const puntajeRivalFinal = puntajeRivalActual - daño;
 
-        // VERIFICAMOS SI LO ELIMINAMOS (Menor a 0)
         if (puntajeRivalFinal < 0) {
-            // Actualizamos el puntaje visualmente para que se vea el negativo
+            // CASO VICTORIA: Actualizamos puntaje negativo y declaramos ganador
             setPuntajes(prev => {
                 const nuevo = { ...prev };
                 if (turno === 1) nuevo.jug2 = puntajeRivalFinal;
                 else nuevo.jug1 = puntajeRivalFinal;
                 return nuevo;
             });
-            
-            // Declaramos ganador y CORTAMOS la ejecución (no cambiamos de turno)
             setGanador(turno); 
-            return; 
+            return; // <--- IMPORTANTE: Si hay ganador, salimos aquí y NO cambiamos de turno
         }
 
-        // Si sobrevive, flujo normal
+        // CASO NORMAL (Daño pero no eliminación)
         alert(`¡ATAQUE FINALIZADO!\n\nLe quitaste ${daño} puntos al rival.`);
         setPuntajes(prev => {
             const nuevo = { ...prev };
@@ -209,13 +220,14 @@ function Juego({ volver }) {
         });
 
       } else {
+        // CASO SIN DAÑO
         alert("Ataque fallido. No hiciste daño extra.");
       }
       
-      // Solo cerramos el turno si NO hubo ganador
+      // --- ESTA ES LA LÍNEA CLAVE QUE FALTABA O NO SE EJECUTABA ---
+      // Si no hubo ganador, SIEMPRE se debe cerrar el turno al final.
       cerrarTurnoCompleto();
   };
-
     // --- RENDERIZADO ---
     // Calculamos dinámicamente si el botón debe estar deshabilitado
     const cantidadGuardadosAhora = dadosFijos.filter(Boolean).length;
@@ -228,7 +240,7 @@ function Juego({ volver }) {
             {/* HEADER GLOBAL */}
             <div style={{ marginBottom: '20px', borderBottom: '1px solid #555', paddingBottom: '10px' }}>
                 <h3>Global - J1: {puntajes.jug1} | J2: {puntajes.jug2}</h3>
-                <p style={{ color: 'cyan' }}>Turno actual: Jugador {turno}</p>
+                <p style={{ color: 'red' }}>Turno actual: Jugador {turno}</p>
             </div>
 
             {/* FASE INICIO */}

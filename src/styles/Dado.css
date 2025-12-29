@@ -1,13 +1,49 @@
-.dado {
-  font-size: 100px;  /* Tamaño gigante para que se vea bien */
-  line-height: 100px;
-  color: #ffffff;    /* Color de los puntos/dibujo */
-  text-shadow: 2px 2px 4px #000000; /* Sombrita para relieve */
+/* --- OPCIÓN A: Estilo Clásico Casino --- */
+
+.dado-cubo {
+  width: 60px;  /* Tamaño del dado */
+  height: 60px;
+  background-color: #f0f0f0; /* Blanco hueso */
+  border-radius: 12px; /* Bordes redondeados */
+  border: 1px solid #ccc;
+  /* Sombra para efecto 3D realista */
+  box-shadow: 
+      inset 2px 2px 5px rgba(255, 255, 255, 0.8), /* Brillo superior */
+      inset -2px -2px 5px rgba(0, 0, 0, 0.2),  /* Sombra interior */
+      3px 3px 8px rgba(0,0,0,0.4); /* Sombra proyectada */
+      
+  /* Configuración de la rejilla para los puntos */
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: repeat(3, 1fr);
+  padding: 6px;
   cursor: pointer;
-  user-select: none; /* Para que no se seleccione como texto al hacer click */
-  transition: transform 0.2s;
+  transition: all 0.2s ease;
 }
 
-.dado:hover {
-  transform: scale(1.1); /* Efecto zoom al pasar el mouse */
+/* Efecto al pasar el mouse */
+.dado-cubo:hover {
+  transform: translateY(-5px) scale(1.05); /* Se levanta un poquito */
+  box-shadow: 
+      inset 2px 2px 5px rgba(255, 255, 255, 0.8),
+      inset -2px -2px 5px rgba(0, 0, 0, 0.2),
+      5px 8px 12px rgba(0,0,0,0.5); /* Sombra más larga */
+}
+
+/* Las celdas vacías del grid */
+.celda {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Los puntos negros */
+.punto {
+  width: 12px;
+  height: 12px;
+  background-color: #111; /* Color del punto */
+  border-radius: 50%; /* Círculo perfecto */
+  box-shadow: inset 1px 1px 2px rgba(0,0,0,0.5); /* Pequeña profundidad en el punto */
 }
