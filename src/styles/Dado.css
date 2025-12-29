@@ -1,0 +1,13 @@
+.dado {
+  font-size: 100px;  /* Tamaño gigante para que se vea bien */
+  line-height: 100px;
+  color: #ffffff;    /* Color de los puntos/dibujo */
+  text-shadow: 2px 2px 4px #000000; /* Sombrita para relieve */
+  cursor: pointer;
+  user-select: none; /* Para que no se seleccione como texto al hacer click */
+  transition: transform 0.2s;
+}
+
+.dado:hover {
+  transform: scale(1.1); /* Efecto zoom al pasar el mouse */
+}
